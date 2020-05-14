@@ -14,7 +14,7 @@
         <script>
             var geometry;
             var camera, scene, renderer;
-
+            
             function start(){
                 scene = new THREE.Scene();
 
@@ -26,7 +26,7 @@
                 document.body.appendChild(renderer.domElement);
 
                 geometry = new THREE.BoxGeometry();
-                material = new THREE.MeshBasicMaterial({color:0x00ff00});
+                material = new THREE.MeshBasicMaterial({wireframe:true, color:0x00ff00});
 
                 cube = new THREE.Mesh(geometry, material);
                     
@@ -44,6 +44,12 @@
  
             start()
             animate();
+
+            var size = 10;
+            var divisions = 10;
+
+            var gridHelperV = new THREE.GridHelper(size,divisions);
+            scene.add(gridHelper);
 
         </script>
     </body>
