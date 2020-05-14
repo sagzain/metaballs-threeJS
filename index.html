@@ -13,14 +13,23 @@
         <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
         <script src="https://threejs.org/examples/js/controls/TransformControls.js"></script>
 
+        <script src="js/json.js"></script>
 
-        <script type="module">
+        <script>
+
+            var offset = 5;
+
             //Scene variables
-            var geometry, mesh, material;
+            var geometry, material;
             var camera, scene, renderer;
 
             //Control variables
             var transform, orbit;
+
+            //Reading of the JSON in a js file as a variable
+            var data = JSON.parse(json);
+            console.log(data);
+            
 
             /*Function that sets up the scene with the camera, render, mesh with material and geometry
               and also event controllers*/
@@ -32,7 +41,7 @@
                 scene.add( new THREE.GridHelper(20,10));
 
                 //Setting up the camera to see the scene
-                camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                camera = new THREE.PerspectiveCamera(105, window.innerWidth / window.innerHeight, 0.1, 1000);
                 camera.position.set(5,3,5);
 				
                 //Renderer in charge of rendering the scene
@@ -40,13 +49,14 @@
                 renderer.setSize(window.innerWidth, window.innerHeight);
                 document.body.appendChild(renderer.domElement);
 
-                //Geometry and material that builds up a mesh
+                /*//Geometry and material that builds up a mesh
                 geometry = new THREE.BoxGeometry();
                 material = new THREE.MeshNormalMaterial();
                 mesh = new THREE.Mesh(geometry, material);
 
-                scene.add(mesh); //Adding the mesh to the scene
+                scene.add(mesh); //Adding the mesh to the scene*/
 
+                createobjects();
 
                 /*Orbit controller to control de camera
                   Controls are similar to blender:
@@ -68,7 +78,7 @@
                 transform.addEventListener('dragging-changed', function(event){
                     orbit.enabled =! event.value; //That prevents the orbit controller to works while we are draging(transforming) an object
                 });
-                transform.attach(mesh);
+                //transform.attach(mesh);
                 scene.add(transform);
 
                 //EventListener to changes on the window size
@@ -89,6 +99,27 @@
                 });
             }
 
+            function createobjects()
+            {
+                geometry = new THREE.BoxGeometry();
+                material = new THREE.MeshNormalMaterial();
+                
+                var x = 0;
+
+                for(element in data)
+                {
+                    if (data[element].type == 'blob')
+                    {
+                        var mesh = new THREE.Mesh(geometry, material);
+                        mesh.position.x = Math.random()*(x + offset);
+                        mesh.position.y = Math.random()*(x + offset);
+                        mesh.position.z = Math.random()*(x + offset);
+                        
+                        scene.add(mesh);
+                    }
+                    x+=1;
+                }
+            }
             /*Function called when EventListener detects changes on the window size
               It updates the scene to the current window size and renders it again*/
             function onWindowResize()
@@ -122,6 +153,7 @@
             //HERE IS WHERE MAGIC STARTS TO HAPPEN
             init()
             //animate();
+            render();
         </script>
     </body>
 </html>
