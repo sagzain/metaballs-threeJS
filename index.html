@@ -19,56 +19,79 @@
             var geometry, mesh, material;
             var camera, scene, renderer;
 
+            //Control variables
             var transform, orbit;
 
+            /*Function that sets up the scene with the camera, render, mesh with material and geometry
+              and also event controllers*/
             function init()
             {
 
+                //Setting up the scene with a GridHelper to see a grid on the screen
                 scene = new THREE.Scene();
                 scene.add( new THREE.GridHelper(20,10));
 
+                //Setting up the camera to see the scene
                 camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-                camera.position.set( 5, 3, 5);
-				camera.lookAt( 0, 0, 0 );
-
+                camera.position.set(5,3,5);
+				
+                //Renderer in charge of rendering the scene
                 renderer = new THREE.WebGLRenderer({antialias: true});
                 renderer.setSize(window.innerWidth, window.innerHeight);
                 document.body.appendChild(renderer.domElement);
 
+                //Geometry and material that builds up a mesh
                 geometry = new THREE.BoxGeometry();
                 material = new THREE.MeshNormalMaterial();
                 mesh = new THREE.Mesh(geometry, material);
-            
-                scene.add(mesh);
 
+                scene.add(mesh); //Adding the mesh to the scene
+
+
+                /*Orbit controller to control de camera
+                  Controls are similar to blender:
+                  - Left Click + Drag : Rotate the camera
+                  - Right Click + Drag: Move the camera
+                  - Shift + Left Click + Drag : Move the camera
+                  - Shift + Right Click + Drag: Rotate the camera
+                  - Middle Mouse + Drag: zoom in/zoom out*/
                 orbit = new THREE.OrbitControls(camera,renderer.domElement);
                 orbit.update();
                 orbit.addEventListener('change', render);
 
+                /*Transform Controller:
+                 It allows to select a mesh and transform it
+                 We will add later a keylistener to be able not only to
+                 translate the objects but also rotate and scale.*/
                 transform = new THREE.TransformControls(camera, renderer.domElement);
                 transform.addEventListener('change',render);
                 transform.addEventListener('dragging-changed', function(event){
-                    orbit.enabled =! event.value;
+                    orbit.enabled =! event.value; //That prevents the orbit controller to works while we are draging(transforming) an object
                 });
-
                 transform.attach(mesh);
+                transform.attach(mesh2);
                 scene.add(transform);
 
+                //EventListener to changes on the window size
                 window.addEventListener('resize', onWindowResize, false);
+
+                //EventListener on pressing keys to emulate Blender's transformation tools.
                 window.addEventListener('keydown', function(event){
                     switch(event.keyCode){
-                        case 87: //W
+                        case 87: //W key for translating the object
                             transform.setMode("translate");
                             break;
-                        case 83: //S
+                        case 83: //S key for scaling the object
                             transform.setMode("scale");
                             break;
-                        case 82: //R
+                        case 82: //R key for rotating the object
                             transform.setMode("rotate");
                     }
                 });
             }
 
+            /*Function called when EventListener detects changes on the window size
+              It updates the scene to the current window size and renders it again*/
             function onWindowResize()
             {
                 const aspect = window.innerWidth / window.innerHeight;
@@ -81,23 +104,25 @@
                 render();
             }
 
+            //Animation of the objects happens here
             function animate()
             {
                 requestAnimationFrame(animate);
 
-                //mesh.rotation.x += 0.01;
-                //mesh.rotation.y += 0.01;
+                mesh.rotation.x += 0.01;
+                mesh.rotation.y += 0.01;
                 
-                renderer.render(scene,camera);  
+                render();  
             }
 
+            //Function that renders the scene with its elements and the camera.
             function render(){
                 renderer.render(scene,camera);
             }
             
-            //Magic happens here (Starting point)
+            //HERE IS WHERE MAGIC STARTS TO HAPPEN
             init()
-            animate();
+            //animate();
         </script>
     </body>
 </html>
