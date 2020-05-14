@@ -29,8 +29,13 @@
             //Reading of the JSON in a js file as a variable
             var data = JSON.parse(json);
             console.log(data);
-            
+   
+            //HERE IS WHERE MAGIC STARTS TO HAPPEN
+            init()
+            //animate();
+            render();
 
+            //FUNCTIONS 
             /*Function that sets up the scene with the camera, render, mesh with material and geometry
               and also event controllers*/
             function init()
@@ -38,7 +43,7 @@
 
                 //Setting up the scene with a GridHelper to see a grid on the screen
                 scene = new THREE.Scene();
-                scene.add( new THREE.GridHelper(20,10));
+                scene.add(new THREE.GridHelper(10,10));
 
                 //Setting up the camera to see the scene
                 camera = new THREE.PerspectiveCamera(105, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -101,7 +106,7 @@
 
             function createobjects()
             {
-                geometry = new THREE.BoxGeometry();
+                
                 material = new THREE.MeshNormalMaterial();
                 
                 var x = 0;
@@ -110,10 +115,12 @@
                 {
                     if (data[element].type == 'blob')
                     {
+                        geometry = new THREE.SphereGeometry(data[element].radius);
+
                         var mesh = new THREE.Mesh(geometry, material);
-                        mesh.position.x = Math.random()*(x + offset);
-                        mesh.position.y = Math.random()*(x + offset);
-                        mesh.position.z = Math.random()*(x + offset);
+                        mesh.position.x = data[element].position[0];
+                        mesh.position.y = data[element].position[1];
+                        mesh.position.z = data[element].position[2];
                         
                         scene.add(mesh);
                     }
@@ -139,8 +146,8 @@
             {
                 requestAnimationFrame(animate);
 
-                mesh.rotation.x += 0.01;
-                mesh.rotation.y += 0.01;
+                mesh.position.x += 0.01;
+                mesh.position.y += 0.01;
                 
                 render();  
             }
@@ -149,11 +156,6 @@
             function render(){
                 renderer.render(scene,camera);
             }
-            
-            //HERE IS WHERE MAGIC STARTS TO HAPPEN
-            init()
-            //animate();
-            render();
         </script>
     </body>
 </html>
