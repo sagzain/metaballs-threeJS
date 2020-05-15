@@ -14,8 +14,11 @@
         <script src="https://threejs.org/examples/js/controls/TransformControls.js"></script>
 
         <script src="js/json.js"></script>
+        <script src="js/blob.js"></script>
 
         <script>
+            //We will store the blobs here
+            var blobs = [];
 
             var offset = 5;
 
@@ -61,7 +64,8 @@
 
                 scene.add(mesh); //Adding the mesh to the scene*/
 
-                createobjects();
+                createblobs();
+                //createobjects();
 
                 /*Orbit controller to control de camera
                   Controls are similar to blender:
@@ -104,12 +108,32 @@
                 });
             }
 
+            function createblobs()
+            {
+                for(element in data)
+                {
+                    if (data[element].type == 'blob')
+                    {
+                        var position = new THREE.Vector3().fromArray(data[element].position);
+                        var energy = data[element].energy;
+                        var radius = data[element].radius;
+
+                        var blob = new Blob(position, energy, radius);
+                        blobs.push(blob);
+                    }
+                    
+                }
+            
+                console.log(blobs);
+
+            }
+
             function createobjects()
             {
                 
                 material = new THREE.MeshNormalMaterial();
                 
-                var x = 0;
+                
 
                 for(element in data)
                 {
