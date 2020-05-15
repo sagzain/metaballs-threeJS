@@ -13,59 +13,62 @@
         <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
         <script src="https://threejs.org/examples/js/controls/TransformControls.js"></script>
 
-        <script src="js/json.js"></script>
+        <script src="js/json_test.js"></script>
+        <script src="js/json_exercise.js"></script>
         <script src="js/blob.js"></script>
 
         <script>
+
+            /*-------------------------------------------------------*/
+            /*-----------------------VARIABLES-----------------------*/
+            /*-------------------------------------------------------*/
+            
             //We will store the blobs here
             var blobs = [];
 
             var offset = 5;
 
             //Scene variables
-            var geometry, material;
             var camera, scene, renderer;
 
             //Control variables
             var transform, orbit;
 
             //Reading of the JSON in a js file as a variable
-            var data = JSON.parse(json);
-            console.log(data);
+            var data = JSON.parse(json_exercise);
+            console.log("JSON:",data);
    
-            //HERE IS WHERE MAGIC STARTS TO HAPPEN
-            init()
-            //animate();
-            render();
 
-            //FUNCTIONS 
+            /*-------------------------------------------------------*/
+            /*-------------------MAGIC HAPPENS HERE------------------*/
+            /*-------------------------------------------------------*/
+            
+            init();
+            createblobs();
+            createobjects();
+            render();
+        
+
+            /*-------------------------------------------------------*/
+            /*-----------------------FUNCTIONS-----------------------*/
+            /*-------------------------------------------------------*/
+
             /*Function that sets up the scene with the camera, render, mesh with material and geometry
               and also event controllers*/
             function init()
             {
-
                 //Setting up the scene with a GridHelper to see a grid on the screen
                 scene = new THREE.Scene();
-                scene.add(new THREE.GridHelper(10,10));
+                scene.add(new THREE.GridHelper(20,10));
 
                 //Setting up the camera to see the scene
-                camera = new THREE.PerspectiveCamera(105, window.innerWidth / window.innerHeight, 0.1, 1000);
-                camera.position.set(5,3,5);
+                camera = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 0.1, 1000);
+                camera.position.set(5,3,10);
 				
                 //Renderer in charge of rendering the scene
                 renderer = new THREE.WebGLRenderer({antialias: true});
                 renderer.setSize(window.innerWidth, window.innerHeight);
                 document.body.appendChild(renderer.domElement);
-
-                /*//Geometry and material that builds up a mesh
-                geometry = new THREE.BoxGeometry();
-                material = new THREE.MeshNormalMaterial();
-                mesh = new THREE.Mesh(geometry, material);
-
-                scene.add(mesh); //Adding the mesh to the scene*/
-
-                createblobs();
-                //createobjects();
 
                 /*Orbit controller to control de camera
                   Controls are similar to blender:
@@ -121,35 +124,68 @@
                         var blob = new Blob(position, energy, radius);
                         blobs.push(blob);
                     }
-                    
                 }
-            
-                console.log(blobs);
-
             }
 
             function createobjects()
             {
+                var material = new THREE.MeshBasicMaterial(0x4444FF);
                 
-                material = new THREE.MeshNormalMaterial();
-                
-                
-
                 for(element in data)
                 {
-                    if (data[element].type == 'blob')
+                    if(data[element].type == 'geometry')
                     {
-                        geometry = new THREE.SphereGeometry(data[element].radius);
+                        var geometry = new THREE.Geometry();
 
-                        var mesh = new THREE.Mesh(geometry, material);
-                        mesh.position.x = data[element].position[0];
-                        mesh.position.y = data[element].position[1];
-                        mesh.position.z = data[element].position[2];
+                        for(vertex in data[element].vertices)
+                        {
+                            geometry.vertices.push(new THREE.Vector3().fromArray(data[element].vertices[vertex]));
                         
-                        scene.add(mesh);
+                        }
+
+                        for(face in data[element].faces)
+                        {
+                            geometry.faces.push(new THREE.Face3(data[element].faces[face][0],
+                                                                data[element].faces[face][1],
+                                                                data[element].faces[face][2]));
+                        }
+                        var verticesOfCube = [
+                            -1,-1,-1,    1,-1,-1,    1, 1,-1,    -1, 1,-1,
+                            -1,-1, 1,    1,-1, 1,    1, 1, 1,    -1, 1, 1,
+                        ];
+
+                        var indicesOfFaces = [
+                            2,1,0,    0,3,2,
+                            0,4,7,    7,3,0,
+                            0,1,5,    5,4,0,
+                            1,2,6,    6,5,1,
+                            2,3,7,    7,6,2,
+                            4,5,6,    6,7,4
+                        ];
+
+                        var geometry2 = new THREE.PolyhedronBufferGeometry( verticesOfCube, indicesOfFaces, 6, 2 );
+                        /*geometry.faces.push(new THREE.Face3(0,1,2),
+                                            new THREE.Face3(0,1,3),
+                                            new THREE.Face3(0,2,3),
+                                            
+                                            new THREE.Face3(1,0,2),
+                                            new THREE.Face3(1,2,0),
+                                            new THREE.Face3(1,0,3),
+                                            new THREE.Face3(1,3,0),
+                                            new THREE.Face3(1,2,3),
+                                            
+                                            new THREE.Face3(2,0,1),
+                                            new THREE.Face3(2,1,0),
+                                            new THREE.Face3(2,3,0),
+                                            new THREE.Face3(2,0,3));*/
+
                     }
-                    x+=1;
                 }
+                //var geometry = new THREE.SphereGeometry(blobs[blob].radius);
+
+                var mesh = new THREE.Mesh(geometry2, material);
+
+                scene.add(mesh); 
             }
             /*Function called when EventListener detects changes on the window size
               It updates the scene to the current window size and renders it again*/
@@ -164,18 +200,7 @@
 
                 render();
             }
-
-            //Animation of the objects happens here
-            function animate()
-            {
-                requestAnimationFrame(animate);
-
-                mesh.position.x += 0.01;
-                mesh.position.y += 0.01;
-                
-                render();  
-            }
-
+            
             //Function that renders the scene with its elements and the camera.
             function render(){
                 renderer.render(scene,camera);
