@@ -30,6 +30,7 @@
 
             //Scene variables
             var camera, scene, renderer;
+            var geometry;
 
             //Control variables
             var transform, orbit;
@@ -129,61 +130,24 @@
 
             function createobjects()
             {
-                var material = new THREE.MeshBasicMaterial(0x4444FF);
-                
+                var material = new THREE.MeshBasicMaterial();
+                geometry = new THREE.Geometry();
+
                 for(element in data)
                 {
-                    if(data[element].type == 'geometry')
+                    if(data[element].type == 'cube')
                     {
-                        var geometry = new THREE.Geometry();
-
-                        for(vertex in data[element].vertices)
-                        {
-                            geometry.vertices.push(new THREE.Vector3().fromArray(data[element].vertices[vertex]));
-                        
-                        }
-
-                        for(face in data[element].faces)
-                        {
-                            geometry.faces.push(new THREE.Face3(data[element].faces[face][0],
-                                                                data[element].faces[face][1],
-                                                                data[element].faces[face][2]));
-                        }
-                        var verticesOfCube = [
-                            -1,-1,-1,    1,-1,-1,    1, 1,-1,    -1, 1,-1,
-                            -1,-1, 1,    1,-1, 1,    1, 1, 1,    -1, 1, 1,
-                        ];
-
-                        var indicesOfFaces = [
-                            2,1,0,    0,3,2,
-                            0,4,7,    7,3,0,
-                            0,1,5,    5,4,0,
-                            1,2,6,    6,5,1,
-                            2,3,7,    7,6,2,
-                            4,5,6,    6,7,4
-                        ];
-
-                        var geometry2 = new THREE.PolyhedronBufferGeometry( verticesOfCube, indicesOfFaces, 6, 2 );
-                        /*geometry.faces.push(new THREE.Face3(0,1,2),
-                                            new THREE.Face3(0,1,3),
-                                            new THREE.Face3(0,2,3),
-                                            
-                                            new THREE.Face3(1,0,2),
-                                            new THREE.Face3(1,2,0),
-                                            new THREE.Face3(1,0,3),
-                                            new THREE.Face3(1,3,0),
-                                            new THREE.Face3(1,2,3),
-                                            
-                                            new THREE.Face3(2,0,1),
-                                            new THREE.Face3(2,1,0),
-                                            new THREE.Face3(2,3,0),
-                                            new THREE.Face3(2,0,3));*/
-
+                        generatevertices();
+                        tetrahedronfaces();
+                        console.log(geometry.faces);
+                    }
+                    else
+                    {
+                        generatevertices();
                     }
                 }
-                //var geometry = new THREE.SphereGeometry(blobs[blob].radius);
 
-                var mesh = new THREE.Mesh(geometry2, material);
+                var mesh = new THREE.Mesh(geometry, material);
 
                 scene.add(mesh); 
             }
@@ -204,6 +168,37 @@
             //Function that renders the scene with its elements and the camera.
             function render(){
                 renderer.render(scene,camera);
+            }
+
+            function generatevertices()
+            {
+                //Store in the geometry variable, the vertices that we have defined on the json file.
+                for(vertex in data[element].vertices)
+                {
+                    geometry.vertices.push(new THREE.Vector3().fromArray(data[element].vertices[vertex]));
+                }
+            }
+
+            /*Function to generate automatical faces given a set of vertices*/
+            function tetrahedronfaces()
+            {
+                //Given the vertices, now we will compute de faces for those
+                for(vertex1 in geometry.vertices)
+                {
+                    for(vertex2 in geometry.vertices)
+                    {
+                        if(vertex2 != vertex1)
+                        {
+                            for(vertex3 in geometry.vertices)
+                            {
+                                if(vertex3 != vertex2 && vertex3 != vertex1) 
+                                {   
+                                    geometry.faces.push(new THREE.Face3(vertex1,vertex2,vertex3));
+                                }
+                            }
+                        }
+                    }
+                }
             }
         </script>
     </body>
