@@ -135,17 +135,18 @@
 
                 for(element in data)
                 {
-                    if(data[element].type == 'cube')
+                    if(data[element].type == 'tetrahedron')
                     {
                         generatevertices();
                         tetrahedronfaces();
-                        console.log(geometry.faces);
-                    }
-                    else
-                    {
-                        generatevertices();
                     }
                 }
+
+                for(vertex in geometry.vertices)
+                {
+                    computeenergy(geometry.vertices[vertex]);
+                }
+                
 
                 var mesh = new THREE.Mesh(geometry, material);
 
@@ -200,6 +201,30 @@
                     }
                 }
             }
+
+            function computeenergy(point)
+            {
+                var dist, fallOff;
+                var energy = 0;
+
+                for(blob in blobs)
+                {
+                    dist = distance(point, blobs[blob].position);
+                    if(dist < blobs[blob].radius)
+                    {
+                        fallOff = 1 - (dist/blobs[blob].radius);
+                        energy += blobs[blob].energy * Math.pow(fallOff,2);
+                    }
+                }
+                console.log("Energy:",energy);
+            }
+
+            function distance(point1, point2)
+            {
+                console.log(point1.distanceTo(point2));
+                return point1.distanceTo(point2);
+            }
+
         </script>
     </body>
 </html>
