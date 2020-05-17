@@ -24,7 +24,7 @@
             /*-------------------------------------------------------*/
             
             //We will store the blobs here
-            var blobs = [];
+            var blobs = [],objects = [];
 
             var offset = 5;
 
@@ -131,26 +131,28 @@
             function createobjects()
             {
                 var material = new THREE.MeshBasicMaterial();
+                material.side = THREE.DoubleSide;
+
                 geometry = new THREE.Geometry();
 
                 for(element in data)
                 {
-                    if(data[element].type == 'tetrahedron')
+                    if(data[element].type == 'object')
                     {
                         generatevertices();
-                        tetrahedronfaces();
+                        generatefaces();
+
+                        var mesh = new THREE.Mesh(geometry, material);
+                        objects.push(mesh);
+                        scene.add(mesh);
                     }
+                    
                 }
 
                 for(vertex in geometry.vertices)
                 {
                     computeenergy(geometry.vertices[vertex]);
                 }
-                
-
-                var mesh = new THREE.Mesh(geometry, material);
-
-                scene.add(mesh); 
             }
             /*Function called when EventListener detects changes on the window size
               It updates the scene to the current window size and renders it again*/
@@ -181,24 +183,11 @@
             }
 
             /*Function to generate automatical faces given a set of vertices*/
-            function tetrahedronfaces()
+            function generatefaces()
             {
-                //Given the vertices, now we will compute de faces for those
-                for(vertex1 in geometry.vertices)
+                for(face in data[element].faces)
                 {
-                    for(vertex2 in geometry.vertices)
-                    {
-                        if(vertex2 != vertex1)
-                        {
-                            for(vertex3 in geometry.vertices)
-                            {
-                                if(vertex3 != vertex2 && vertex3 != vertex1) 
-                                {   
-                                    geometry.faces.push(new THREE.Face3(vertex1,vertex2,vertex3));
-                                }
-                            }
-                        }
-                    }
+                    geometry.faces.push(new THREE.Face3(data[element].faces[face][0],data[element].faces[face][1],data[element].faces[face][2]))
                 }
             }
 
