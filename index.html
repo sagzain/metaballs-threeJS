@@ -126,6 +126,20 @@
                         blobs.push(blob);
                     }
                 }
+
+                for(blob in blobs)
+                {
+                    var material = new THREE.MeshBasicMaterial({color : 0xA7FBE0});
+                    material.wireframe = true;
+                    
+
+                    var geometry = new THREE.SphereGeometry(blobs[blob].radius);
+
+
+                    var blob_mesh = new THREE.Mesh(geometry,material);
+                    blob_mesh.position.x = blobs[blob].position.x;
+                    blob_mesh.position.y = blobs[blob].position.y;
+                }
             }
 
             function createobjects()
