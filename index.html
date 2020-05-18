@@ -23,10 +23,13 @@
             /*-----------------------VARIABLES-----------------------*/
             /*-------------------------------------------------------*/
             
-            //We will store the blobs here
-            var blobs = [],objects = [];
+            //We will create some arrays to store important variables/objects
+            var blobs = []; //all created blobs are stored here
+            var objects = []; //created objects will be created here
+            var energies = []; //calculated energies will be stored here
 
-            var offset = 5;
+            //Grid and treshold
+            var grid, threshold;
 
             //Scene variables
             var camera, scene, renderer;
@@ -45,8 +48,10 @@
             /*-------------------------------------------------------*/
             
             init();
-            createblobs();
+            setvalues();
+            generateblobs();
             createobjects();
+            marchingcubes();
             render();
         
 
@@ -112,7 +117,19 @@
                 });
             }
 
-            function createblobs()
+            function setvalues()
+            {
+                for(element in data)
+                {
+                    if(data[element].type == 'grid')
+                    {
+                        grid = data[element].value;
+                        threshold = data[element].threshold;
+                    }
+                }
+            }
+
+            function generateblobs()
             {
                 for(element in data)
                 {
@@ -139,6 +156,8 @@
                     var blob_mesh = new THREE.Mesh(geometry,material);
                     blob_mesh.position.x = blobs[blob].position.x;
                     blob_mesh.position.y = blobs[blob].position.y;
+                    blob_mesh.position.z = blobs[blob].position.z;
+                    scene.add(blob_mesh);
                 }
             }
 
@@ -160,12 +179,6 @@
                         objects.push(mesh);
                         scene.add(mesh);
                     }
-                    
-                }
-
-                for(vertex in geometry.vertices)
-                {
-                    computeenergy(geometry.vertices[vertex]);
                 }
             }
             /*Function called when EventListener detects changes on the window size
@@ -205,6 +218,32 @@
                 }
             }
 
+            /* MARCHING CUBES ALGORITHM */
+            function marchingcubes()
+            {
+                var values = [];
+
+                for(vertex in geometry.vertices)
+                {
+                    values.push(computeenergy(geometry.vertices[vertex]));
+                }
+                
+                energies.push(values);
+                console.log("Energy:",energies);
+
+                for(vertex1 in geometry.vertices)
+                {
+                    if(energies[0][vertex1] < threshold)
+                        for(vertex2 in geometry.vertices)
+                        {
+                            if(energies[0][vertex2] > threshold)
+                                if(vertex1 != vertex2)
+                                {
+                                    console.log("study ",vertex1," and ",vertex2);
+                                }
+                        }
+                }
+            }
             function computeenergy(point)
             {
                 var dist, fallOff;
@@ -219,15 +258,20 @@
                         energy += blobs[blob].energy * Math.pow(fallOff,2);
                     }
                 }
-                console.log("Energy:",energy);
+                return(energy);
             }
 
             function distance(point1, point2)
             {
-                console.log(point1.distanceTo(point2));
                 return point1.distanceTo(point2);
             }
 
+            function linearinterpolation()
+            {
+                var ratio = (treshold - energypoint1) / (energypoint2 - energypoint1);
+                var vector = point1 - point2;
+                var newpoint = ratio * vector + vector;
+            }
         </script>
     </body>
 </html>
