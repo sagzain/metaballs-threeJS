@@ -13,6 +13,19 @@ body {
     padding-left: 10px;
 }
 
+.controls{
+    opacity: 0.5;
+    width: 400px;
+    height: 1vh;
+    position: fixed;
+    z-index: 0;
+    bottom: 22.5%;
+    right: 0;
+    padding-right: 25px;
+    user-select: none;
+    pointer-events:none;
+}
+
 .panel-title {
     text-align: center;
 }
@@ -26,14 +39,6 @@ body {
 .c {
     float: right;
     position: relative;
-}
-
-.h4{
-    font-size:10px;
-}
-
-#subpanel{
-    height:relative;
 }
 
 canvas{
