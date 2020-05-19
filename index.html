@@ -3,10 +3,13 @@
     <head>
         <meta charset="utf-8"> 
         <title> Marching Cubes </title>
-        <style>
-            body {margin:0;}
-            canvas{display: block}
-        </style>
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    
+        <link rel="stylesheet" href="./main.css">
+
     </head>
     <body>
         <script src="js/three.js"></script>
@@ -286,5 +289,80 @@
                 return vector;
             }
         </script>
+
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#collapse1">Scene options</a>
+                    </h4>
+                </div>
+
+                <div id="collapse1" class="panel-collapse collapse">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" href="#collapse2">World</a>
+                        </h4>
+                    </div>
+                    <div id="collapse2" clasS="panel-collapse collapse">
+                        <li class="list-group-item">
+                            <div>
+                                <span class="property-name">World grid:</span>
+                                <div class="c">
+                                    <input type="checkbox" checked="checked">
+                                </div>
+                            </div>   
+                        </li>
+                    </div>
+
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" href="#collapse3">Objects</a>
+                        </h4>
+                    </div>
+                    <div id="collapse3" clasS="panel-collapse collapse">
+                        <li class="list-group-item">
+                            <div>
+                                <span class="property-name">Display:</span>
+                                <div class="c">
+                                    <select id="display">
+                                        <option value="initial_object">Initial Object</option>
+                                        <option value="final_object">Final Result</option>  
+                                    </select> 
+                                </div>
+                            </div>
+                        </li>
+                    </div>
+
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" href="#collapse4">Blobs</a>
+                        </h4>
+                    </div>
+                    <div id="collapse4" clasS="panel-collapse collapse">
+                        <li class="list-group-item">
+                            <div>
+                                <span class="property-name">Show blob field:</span>
+                                <div class="c">
+                                    <input type="checkbox">
+                                </div>
+                            </div>   
+                        </li>
+                        <li class="list-group-item">
+                            <div>
+                                <span class="property-name">Blob field color:</span>
+                                <select class="colors">
+                                    <option value="red">red</option>
+                                    <option value="blue">blue</option>  
+                                    <option value="orange">orange</option> 
+                                    <option value="green">green</option> 
+                                    <option value="yellow">yellow</option> 
+                                </select>
+                            </div>
+                        </li>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

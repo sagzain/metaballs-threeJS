@@ -1,0 +1,44 @@
+body {
+    margin:0;
+}
+
+.panel-group {
+    width: 215px;
+    height: 100%;
+    position: fixed;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    padding-top: 10px;
+    padding-left: 10px;
+}
+
+.panel-title {
+    text-align: center;
+}
+
+.property-name {
+    cursor: default;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.c {
+    float: right;
+    position: relative;
+}
+
+.h4{
+    font-size:10px;
+}
+
+#subpanel{
+    height:relative;
+}
+
+canvas{
+    display: block
+}
+
+
+
