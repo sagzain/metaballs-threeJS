@@ -222,6 +222,7 @@
             function marchingcubes()
             {
                 var values = [];
+                var vector = [];
 
                 for(vertex in geometry.vertices)
                 {
@@ -231,18 +232,26 @@
                 energies.push(values);
                 console.log("Energy:",energies);
 
+                
                 for(vertex1 in geometry.vertices)
                 {
                     if(energies[0][vertex1] < threshold)
+                    {
                         for(vertex2 in geometry.vertices)
                         {
                             if(energies[0][vertex2] > threshold)
-                                if(vertex1 != vertex2)
-                                {
-                                    console.log("study ",vertex1," and ",vertex2);
-                                }
+                            {
+                                
+                                vector.push(linearinterpolation(geometry.vertices[vertex1], geometry.vertices[vertex2], energies[0][vertex1], energies[0][vertex2]));
+                            }
                         }
+                    }
                 }
+
+                console.log("New points:");
+                console.log(vector);
+
+                geometry.vertices = vector;
             }
             function computeenergy(point)
             {
@@ -258,7 +267,7 @@
                         energy += blobs[blob].energy * Math.pow(fallOff,2);
                     }
                 }
-                return(energy);
+                return(parseFloat(energy.toFixed(2)));
             }
 
             function distance(point1, point2)
@@ -266,11 +275,15 @@
                 return point1.distanceTo(point2);
             }
 
-            function linearinterpolation()
+            function linearinterpolation(point1, point2, energy1, energy2)
             {
-                var ratio = (treshold - energypoint1) / (energypoint2 - energypoint1);
-                var vector = point1 - point2;
-                var newpoint = ratio * vector + vector;
+                var ratio = parseFloat(((threshold - energy1) / (energy2 - energy1)).toFixed(2));
+                var v1 = new THREE.Vector3().copy(point1);
+                var v2 = new THREE.Vector3().copy(point2);
+                var vector = v2.sub(v1);
+                (vector.multiplyScalar(ratio)).add(point1);
+
+                return vector;
             }
         </script>
     </body>
