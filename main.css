@@ -2,6 +2,16 @@ body {
     margin:0;
 }
 
+.github
+{
+    position:fixed;
+    z-index:0;
+    top:10px;
+    left:50%;
+    padding-left:10px;
+    padding-right:10px;
+}
+
 .panel-group {
     width: 215px;
     height: 100%;
@@ -15,11 +25,11 @@ body {
 
 .controls{
     opacity: 0.5;
-    width: 400px;
+    width: 250px;
     height: 1vh;
     position: fixed;
     z-index: 0;
-    bottom: 22.5%;
+    bottom: 25%;
     right: 0;
     padding-right: 25px;
     user-select: none;
