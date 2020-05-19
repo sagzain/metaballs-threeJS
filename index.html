@@ -14,7 +14,6 @@
     <body>
         <script src="js/three.js"></script>
         <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
-        <script src="https://threejs.org/examples/js/controls/TransformControls.js"></script>
 
         <script src="js/json_test.js"></script>
         <script src="js/json_exercise.js"></script>
@@ -90,34 +89,9 @@
                 orbit.update();
                 orbit.addEventListener('change', render);
 
-                /*Transform Controller:
-                 It allows to select a mesh and transform it
-                 We will add later a keylistener to be able not only to
-                 translate the objects but also rotate and scale.*/
-                transform = new THREE.TransformControls(camera, renderer.domElement);
-                transform.addEventListener('change',render);
-                transform.addEventListener('dragging-changed', function(event){
-                    orbit.enabled =! event.value; //That prevents the orbit controller to works while we are draging(transforming) an object
-                });
-                //transform.attach(mesh);
-                scene.add(transform);
 
                 //EventListener to changes on the window size
                 window.addEventListener('resize', onWindowResize, false);
-
-                //EventListener on pressing keys to emulate Blender's transformation tools.
-                window.addEventListener('keydown', function(event){
-                    switch(event.keyCode){
-                        case 87: //W key for translating the object
-                            transform.setMode("translate");
-                            break;
-                        case 83: //S key for scaling the object
-                            transform.setMode("scale");
-                            break;
-                        case 82: //R key for rotating the object
-                            transform.setMode("rotate");
-                    }
-                });
             }
 
             function setvalues()
@@ -290,102 +264,104 @@
             }
         </script>
 
-        <div class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" href="#collapse1">Scene options</a>
-                    </h4>
-                </div>
-
-                <div id="collapse1" class="panel-collapse collapse">
+        <div class="content">
+            <div class="panel-group">
+                <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" href="#collapse2">World</a>
+                            <a data-toggle="collapse" href="#collapse1">Scene options</a>
                         </h4>
-                    </div>
-                    <div id="collapse2" clasS="panel-collapse collapse">
-                        <li class="list-group-item">
-                            <div>
-                                <span class="property-name">World grid:</span>
-                                <div class="c">
-                                    <input type="checkbox" checked="checked">
-                                </div>
-                            </div>   
-                        </li>
                     </div>
 
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" href="#collapse3">Objects</a>
-                        </h4>
-                    </div>
-                    <div id="collapse3" clasS="panel-collapse collapse">
-                        <li class="list-group-item">
-                            <div>
-                                <span class="property-name">Display:</span>
-                                <div class="c">
-                                    <select id="display">
-                                        <option value="initial_object">Initial Object</option>
-                                        <option value="final_object">Final Result</option>  
-                                    </select> 
-                                </div>
-                            </div>
-                        </li>
-                    </div>
+                    <div id="collapse1" class="panel-collapse collapse">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" href="#collapse2">World</a>
+                            </h4>
+                        </div>
+                        <div id="collapse2" clasS="panel-collapse collapse">
+                            <li class="list-group-item">
+                                <div>
+                                    <span class="property-name">World grid:</span>
+                                    <div class="c">
+                                        <input type="checkbox" checked="checked">
+                                    </div>
+                                </div>   
+                            </li>
+                        </div>
 
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" href="#collapse4">Blobs</a>
-                        </h4>
-                    </div>
-                    <div id="collapse4" clasS="panel-collapse collapse">
-                        <li class="list-group-item">
-                            <div>
-                                <span class="property-name">Show blob field:</span>
-                                <div class="c">
-                                    <input type="checkbox">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" href="#collapse3">Objects</a>
+                            </h4>
+                        </div>
+                        <div id="collapse3" clasS="panel-collapse collapse">
+                            <li class="list-group-item">
+                                <div>
+                                    <span class="property-name">Display:</span>
+                                    <div class="c">
+                                        <select id="display">
+                                            <option value="initial_object">Initial Object</option>
+                                            <option value="final_object">Final Result</option>  
+                                        </select> 
+                                    </div>
                                 </div>
-                            </div>   
-                        </li>
-                        <li class="list-group-item">
-                            <div>
-                                <span class="property-name">Blob field color:</span>
-                                <select class="colors">
-                                    <option value="red">red</option>
-                                    <option value="blue">blue</option>  
-                                    <option value="orange">orange</option> 
-                                    <option value="green">green</option> 
-                                    <option value="yellow">yellow</option> 
-                                </select>
-                            </div>
-                        </li>
+                            </li>
+                        </div>
+
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" href="#collapse4">Blobs</a>
+                            </h4>
+                        </div>
+                        <div id="collapse4" clasS="panel-collapse collapse">
+                            <li class="list-group-item">
+                                <div>
+                                    <span class="property-name">Show blob field:</span>
+                                    <div class="c">
+                                        <input type="checkbox">
+                                    </div>
+                                </div>   
+                            </li>
+                            <li class="list-group-item">
+                                <div>
+                                    <span class="property-name">Blob field color:</span>
+                                    <select class="colors">
+                                        <option value="red">red</option>
+                                        <option value="blue">blue</option>  
+                                        <option value="orange">orange</option> 
+                                        <option value="green">green</option> 
+                                        <option value="yellow">yellow</option> 
+                                    </select>
+                                </div>
+                            </li>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    
-        <div class = "controls">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">Controls</h4>
-                </div>
-                <div class="panel-heading">
-                    <li class="list-group-item">
-                        <span>
-                            Left Click / Shift + Right Click - Rotate Camera
-                        </span> 
-                    </li>
-                    <li class="list-group-item">
-                        <span>
-                            Right Click / Shift + Left Click - Move Camera
-                        </span>
-                    </li>  
-                    <li class="list-group-item">
-                        <span>
-                            Middle Mouse - Zoom in / Zoom out
-                        </span>
-                    </li>
+        
+            <div class = "controls">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">Controls</h4>
+                    </div>
+                    <div class="panel-heading">
+                        <li class="list-group-item">
+                            <span>
+                                Left Click / Shift + Right Click - Rotate Camera
+                            </span> 
+                        </li>
+                        <li class="list-group-item">
+                            <span>
+                                Right Click / Shift + Left Click - Move Camera
+                            </span>
+                        </li>  
+                        <li class="list-group-item">
+                            <span>
+                                Middle Mouse - Zoom in / Zoom out
+                            </span>
+                        </li>
+                    </div>
                 </div>
             </div>
         </div>
