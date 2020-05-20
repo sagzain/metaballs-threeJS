@@ -44,6 +44,9 @@
                 world_grid = new THREE.GridHelper(20,10);
                 scene.add(world_grid);
 
+                //Add gizmo to show world's axis X,Y,Z
+                scene.add(new THREE.AxesHelper(5));
+
                 //Setting up the camera to see the scene
                 camera = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 0.1, 1000);
                 camera.position.set(5,3,10);
