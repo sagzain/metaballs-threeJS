@@ -1,2 +1,2 @@
 //Json is created as a variable in a js file in order to be easily imported
-var json_test = '[{"type": "grid","value": 0.1,"threshold": 0.6},{"type": "blob","position": [0.0, 0.0, 0.0],"energy": 6,"radius": 1},{"type": "blob","position": [0.75, 0.75, 0.75],"energy": 4, "radius": 1},{"type": "blob","position": [-0.5, -0.75, 0.3],"energy": 4,"radius": 1}]';
+var json_test = '[{"type": "grid","value": 0.1,"threshold": 0.6},{"type": "blob","position": [0.0, 0.0, 0.0],"energy": 6,"radius": 1},{"type": "blob","position": [0.75, 0.75, 0.75],"energy": 4, "radius": 1},{"type": "blob","position": [-0.5, -0.75, 0.3],"energy": 4,"radius": 1},{"type":"object","vertices":[[0.75,0.6,1],[0.3,-0.6,0.75],[-1,-0.5,0.8],[1,-1,-0.75]],"faces":[[0,1,2],[0,1,3],[0,2,3],[1,2,3]]}]';

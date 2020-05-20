@@ -18,250 +18,19 @@
         <script src="js/json_test.js"></script>
         <script src="js/json_exercise.js"></script>
         <script src="js/blob.js"></script>
+        <script src="js/scene.js"></script>
 
         <script>
-
-            /*-------------------------------------------------------*/
-            /*-----------------------VARIABLES-----------------------*/
-            /*-------------------------------------------------------*/
-            
-            //We will create some arrays to store important variables/objects
-            var blobs = []; //all created blobs are stored here
-            var objects = []; //created objects will be created here
-            var energies = []; //calculated energies will be stored here
-
-            //Grid and treshold
-            var grid, threshold;
-
-            //Scene variables
-            var camera, scene, renderer;
-            var geometry;
-
-            //Control variables
-            var transform, orbit;
-
-            //Reading of the JSON in a js file as a variable
-            var data = JSON.parse(json_exercise);
-            console.log("JSON:",data);
-   
-
             /*-------------------------------------------------------*/
             /*-------------------MAGIC HAPPENS HERE------------------*/
             /*-------------------------------------------------------*/
-            
+            readjson(json_exercise);
             init();
             setvalues();
             generateblobs();
             createobjects();
             marchingcubes();
             render();
-        
-
-            /*-------------------------------------------------------*/
-            /*-----------------------FUNCTIONS-----------------------*/
-            /*-------------------------------------------------------*/
-
-            /*Function that sets up the scene with the camera, render, mesh with material and geometry
-              and also event controllers*/
-            function init()
-            {
-                //Setting up the scene with a GridHelper to see a grid on the screen
-                scene = new THREE.Scene();
-                scene.add(new THREE.GridHelper(20,10));
-
-                //Setting up the camera to see the scene
-                camera = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 0.1, 1000);
-                camera.position.set(5,3,10);
-				
-                //Renderer in charge of rendering the scene
-                renderer = new THREE.WebGLRenderer({antialias: true});
-                renderer.setSize(window.innerWidth, window.innerHeight);
-                document.body.appendChild(renderer.domElement);
-
-                /*Orbit controller to control de camera
-                  Controls are similar to blender:
-                  - Left Click + Drag : Rotate the camera
-                  - Right Click + Drag: Move the camera
-                  - Shift + Left Click + Drag : Move the camera
-                  - Shift + Right Click + Drag: Rotate the camera
-                  - Middle Mouse + Drag: zoom in/zoom out*/
-                orbit = new THREE.OrbitControls(camera,renderer.domElement);
-                orbit.update();
-                orbit.addEventListener('change', render);
-
-
-                //EventListener to changes on the window size
-                window.addEventListener('resize', onWindowResize, false);
-            }
-
-            function setvalues()
-            {
-                for(element in data)
-                {
-                    if(data[element].type == 'grid')
-                    {
-                        grid = data[element].value;
-                        threshold = data[element].threshold;
-                    }
-                }
-            }
-
-            function generateblobs()
-            {
-                for(element in data)
-                {
-                    if (data[element].type == 'blob')
-                    {
-                        var position = new THREE.Vector3().fromArray(data[element].position);
-                        var energy = data[element].energy;
-                        var radius = data[element].radius;
-
-                        var blob = new Blob(position, energy, radius);
-                        blobs.push(blob);
-                    }
-                }
-
-                for(blob in blobs)
-                {
-                    var material = new THREE.MeshBasicMaterial({color : 0xA7FBE0});
-                    material.wireframe = true;
-                    
-
-                    var geometry = new THREE.SphereGeometry(blobs[blob].radius);
-
-
-                    var blob_mesh = new THREE.Mesh(geometry,material);
-                    blob_mesh.position.x = blobs[blob].position.x;
-                    blob_mesh.position.y = blobs[blob].position.y;
-                    blob_mesh.position.z = blobs[blob].position.z;
-                    scene.add(blob_mesh);
-                }
-            }
-
-            function createobjects()
-            {
-                var material = new THREE.MeshBasicMaterial();
-                material.side = THREE.DoubleSide;
-
-                geometry = new THREE.Geometry();
-
-                for(element in data)
-                {
-                    if(data[element].type == 'object')
-                    {
-                        generatevertices();
-                        generatefaces();
-
-                        var mesh = new THREE.Mesh(geometry, material);
-                        objects.push(mesh);
-                        scene.add(mesh);
-                    }
-                }
-            }
-            /*Function called when EventListener detects changes on the window size
-              It updates the scene to the current window size and renders it again*/
-            function onWindowResize()
-            {
-                const aspect = window.innerWidth / window.innerHeight;
-
-                camera.aspect = aspect;
-                camera.updateProjectionMatrix();
-
-                renderer.setSize(window.innerWidth, window.innerHeight);
-
-                render();
-            }
-            
-            //Function that renders the scene with its elements and the camera.
-            function render(){
-                renderer.render(scene,camera);
-            }
-
-            function generatevertices()
-            {
-                //Store in the geometry variable, the vertices that we have defined on the json file.
-                for(vertex in data[element].vertices)
-                {
-                    geometry.vertices.push(new THREE.Vector3().fromArray(data[element].vertices[vertex]));
-                }
-            }
-
-            /*Function to generate automatical faces given a set of vertices*/
-            function generatefaces()
-            {
-                for(face in data[element].faces)
-                {
-                    geometry.faces.push(new THREE.Face3(data[element].faces[face][0],data[element].faces[face][1],data[element].faces[face][2]))
-                }
-            }
-
-            /* MARCHING CUBES ALGORITHM */
-            function marchingcubes()
-            {
-                var values = [];
-                var vector = [];
-
-                for(vertex in geometry.vertices)
-                {
-                    values.push(computeenergy(geometry.vertices[vertex]));
-                }
-                
-                energies.push(values);
-                console.log("Energy:",energies);
-
-                
-                for(vertex1 in geometry.vertices)
-                {
-                    if(energies[0][vertex1] < threshold)
-                    {
-                        for(vertex2 in geometry.vertices)
-                        {
-                            if(energies[0][vertex2] > threshold)
-                            {
-                                
-                                vector.push(linearinterpolation(geometry.vertices[vertex1], geometry.vertices[vertex2], energies[0][vertex1], energies[0][vertex2]));
-                            }
-                        }
-                    }
-                }
-
-                console.log("New points:");
-                console.log(vector);
-
-                geometry.vertices = vector;
-            }
-            function computeenergy(point)
-            {
-                var dist, fallOff;
-                var energy = 0;
-
-                for(blob in blobs)
-                {
-                    dist = distance(point, blobs[blob].position);
-                    if(dist < blobs[blob].radius)
-                    {
-                        fallOff = 1 - (dist/blobs[blob].radius);
-                        energy += blobs[blob].energy * Math.pow(fallOff,2);
-                    }
-                }
-                return(parseFloat(energy.toFixed(2)));
-            }
-
-            function distance(point1, point2)
-            {
-                return point1.distanceTo(point2);
-            }
-
-            function linearinterpolation(point1, point2, energy1, energy2)
-            {
-                var ratio = parseFloat(((threshold - energy1) / (energy2 - energy1)).toFixed(2));
-                var v1 = new THREE.Vector3().copy(point1);
-                var v2 = new THREE.Vector3().copy(point2);
-                var vector = v2.sub(v1);
-                (vector.multiplyScalar(ratio)).add(point1);
-
-                return vector;
-            }
         </script>
 
         <div class="content">
@@ -292,7 +61,7 @@
                                 <div>
                                     <span class="property-name">World grid:</span>
                                     <div class="c">
-                                        <input type="checkbox" checked="checked">
+                                        <input type="checkbox" checked="checked" onclick="change_world_grid(this)">
                                     </div>
                                 </div>   
                             </li>
@@ -308,9 +77,9 @@
                                 <div>
                                     <span class="property-name">Display:</span>
                                     <div class="c">
-                                        <select id="display">
-                                            <option value="initial_object">Initial Object</option>
-                                            <option value="final_object" selected="selected">Final Result</option>  
+                                        <select id="display" onChange="change_object_display(value)">
+                                            <option value="initial_object">Initial</option>
+                                            <option value="final_object" selected="selected">Result</option>  
                                         </select> 
                                     </div>
                                 </div>
@@ -327,19 +96,20 @@
                                 <div>
                                     <span class="property-name">Show blob field:</span>
                                     <div class="c">
-                                        <input type="checkbox">
+                                        <input type="checkbox" checked="checked" onclick="change_blob_field(this)">
                                     </div>
                                 </div>   
                             </li>
                             <li class="list-group-item">
                                 <div>
                                     <span class="property-name">Blob field color:</span>
-                                    <select class="colors">
+                                    <select id="colors" onChange="change_field_color(value)">
                                         <option value="red">red</option>
                                         <option value="blue">blue</option>  
-                                        <option value="orange">orange</option> 
+                                        <option value="purple">purple</option> 
                                         <option value="green">green</option> 
                                         <option value="yellow">yellow</option> 
+                                        <option value="aqua">aqua</option>
                                     </select>
                                 </div>
                             </li>
