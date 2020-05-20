@@ -7,7 +7,7 @@ body {
     position:fixed;
     z-index:0;
     top:10px;
-    left:50%;
+    left:40%;
 }
 
 .panel-group {
@@ -19,6 +19,7 @@ body {
     left: 0;
     padding-top: 10px;
     padding-left: 10px;
+    opacity: 0.9;
 }
 
 .controls{
@@ -57,4 +58,8 @@ canvas{
     width: 100%;
 }
 
+p{
+    word-wrap: anywhere;
+    width: 380px;
+}
 
