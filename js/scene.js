@@ -15,7 +15,6 @@
 
             //Scene variables
             var camera, scene, renderer;
-            var world_grid, world_gizmo;
             var geometry;
 
             //Control variables
@@ -42,12 +41,10 @@
                 scene = new THREE.Scene();
 
                 //We will add also a GridHelper to see a grid on the screen
-                world_grid = new THREE.GridHelper(20,10);
-                scene.add(world_grid);
+                scene.add(new THREE.GridHelper(10,10));
 
                 //And a gizmo to show world's axis
-                world_gizmo = new THREE.AxesHelper(4);
-                scene.add(world_gizmo);
+                scene.add(new THREE.AxesHelper(4));
 
                 //Setting up the camera to see the scene
                 camera = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -269,14 +266,18 @@
                 {
                     document.getElementById("grid_size").disabled = false;
                     document.getElementById("grid_size").style.backgroundColor = 'white';
-                    world_grid.visible = true;
+                    for(element in scene.children)
+                        if(scene.children[element].type == 'GridHelper')
+                            scene.getObjectById(scene.children[element].id).visible = true;
 
                 }
                 else
                 {
                     document.getElementById("grid_size").disabled = true;
                     document.getElementById("grid_size").style.backgroundColor = 'lightgray';
-                    world_grid.visible = false;
+                    for(element in scene.children)
+                        if(scene.children[element].type == 'GridHelper')
+                            scene.getObjectById(scene.children[element].id).visible = false;
                 }
 
                 render();
@@ -371,14 +372,20 @@
                 {
                     document.getElementById("gizmo_size").disabled = false;
                     document.getElementById("gizmo_size").style.backgroundColor = 'white';
-                    world_gizmo.visible = true;
+                    for(element in scene.children)
+                        if(scene.children[element].type == 'AxesHelper')
+                            scene.getObjectById(scene.children[element].id).visible = true;
+                
 
                 }
                 else
                 {
                     document.getElementById("gizmo_size").disabled = true;
                     document.getElementById("gizmo_size").style.backgroundColor = 'lightgray';
-                    world_gizmo.visible = false;
+                    for(element in scene.children)
+                        if(scene.children[element].type == 'AxesHelper')
+                            scene.getObjectById(scene.children[element].id).visible = false;
+                
                 }
 
                 render();
@@ -386,10 +393,22 @@
 
             function change_grid_size(checkbox)
             {
+                for(element in scene.children)
+                    if(scene.children[element].type == 'GridHelper')
+                        scene.remove(scene.getObjectById(scene.children[element].id));
+                
+                scene.add(new THREE.GridHelper(checkbox,checkbox));
+    
                 render();
             }
 
             function change_gizmo_size(checkbox)
             {
+                for(element in scene.children)
+                    if(scene.children[element].type == 'AxesHelper')
+                        scene.remove(scene.getObjectById(scene.children[element].id));
+                
+                scene.add(new THREE.AxesHelper(checkbox));
+    
                 render();
             }
