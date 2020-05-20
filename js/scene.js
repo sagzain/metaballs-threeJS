@@ -15,7 +15,7 @@
 
             //Scene variables
             var camera, scene, renderer;
-            var world_grid;
+            var world_grid, world_gizmo;
             var geometry;
 
             //Control variables
@@ -38,14 +38,16 @@
               and also event controllers*/
             function init()
             {
-                //Setting up the scene with a GridHelper to see a grid on the screen
+                //Setting up the scene 
                 scene = new THREE.Scene();
 
+                //We will add also a GridHelper to see a grid on the screen
                 world_grid = new THREE.GridHelper(20,10);
                 scene.add(world_grid);
 
-                //Add gizmo to show world's axis X,Y,Z
-                scene.add(new THREE.AxesHelper(5));
+                //And a gizmo to show world's axis
+                world_gizmo = new THREE.AxesHelper(4);
+                scene.add(world_gizmo);
 
                 //Setting up the camera to see the scene
                 camera = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -265,11 +267,15 @@
             {
                 if(checkbox.checked)
                 {
+                    document.getElementById("grid_size").disabled = false;
+                    document.getElementById("grid_size").style.backgroundColor = 'white';
                     world_grid.visible = true;
 
                 }
                 else
                 {
+                    document.getElementById("grid_size").disabled = true;
+                    document.getElementById("grid_size").style.backgroundColor = 'lightgray';
                     world_grid.visible = false;
                 }
 
@@ -356,5 +362,34 @@
                             }
                         break;
                 }
+                render();
+            }
+
+            function change_world_gizmo(checkbox)
+            {
+                if(checkbox.checked)
+                {
+                    document.getElementById("gizmo_size").disabled = false;
+                    document.getElementById("gizmo_size").style.backgroundColor = 'white';
+                    world_gizmo.visible = true;
+
+                }
+                else
+                {
+                    document.getElementById("gizmo_size").disabled = true;
+                    document.getElementById("gizmo_size").style.backgroundColor = 'lightgray';
+                    world_gizmo.visible = false;
+                }
+
+                render();
+            }
+
+            function change_grid_size(checkbox)
+            {
+                render();
+            }
+
+            function change_gizmo_size(checkbox)
+            {
                 render();
             }

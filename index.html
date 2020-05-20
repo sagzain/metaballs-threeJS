@@ -66,6 +66,38 @@
                                     </div>
                                 </div>   
                             </li>
+                            <li class="list-group-item">
+                                <div>
+                                    <span class="property-name">Blob field color:</span>
+                                    <select id="grid_size" onChange="change_grid_size(value)">
+                                        <option value="5">5</option>
+                                        <option value="10" selected="selected">10</option>  
+                                        <option value="15">15</option> 
+                                        <option value="20">20</option> 
+                                    </select>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div>
+                                    <span class="property-name">World gizmo:</span>
+                                    <div class="c">
+                                        <input type="checkbox" checked="checked" onclick="change_world_gizmo(this)">
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div>
+                                    <span class="property-name">Blob field color:</span>
+                                    <select id="gizmo_size" onChange="change_gizmo_size(value)">
+                                        <option value="2">2</option>
+                                        <option value="4" selected="selected">4</option>  
+                                        <option value="6">6</option> 
+                                        <option value="8">8</option> 
+                                        <option value="10">10</option> 
+
+                                    </select>
+                                </div>
+                            </li>
                         </div>
 
                         <div class="panel-heading">
@@ -105,7 +137,7 @@
                                 <div>
                                     <span class="property-name">Blob field color:</span>
                                     <select id="colors" onChange="change_field_color(value)">
-                                        <option value="red">red</option>
+                                        <option value="red" selected="selected">red</option>
                                         <option value="blue">blue</option>  
                                         <option value="purple">purple</option> 
                                         <option value="green">green</option> 
