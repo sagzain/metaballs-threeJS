@@ -227,6 +227,7 @@
 
                 scene.add(finalmesh);
             }
+            
             function computeenergy(point)
             {
                 var dist, fallOff;
