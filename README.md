@@ -62,10 +62,10 @@ You have two main features to work with:
 
 If you expand the **Scene Options** panel you may encounter with three new options: World, Objects and Blobs
 
-By selecting one of these more options will be showing.
-In the **World** part we have options to Show/Hide the _World grid_ and the _Gizmo_ and also change the size of both elements.  
-For the **Objects** part we have only one option which allows us to see the Initial object (before the algorithm is applied) or the Final result (after the algorithm is applied).  
-And finally the **Blobs** option will allows us to show or hide the energy fields as well as change its color to see the object better.  
+By selecting one of these more options will be showing:
+- In the **World** part we have options to Show/Hide the _World grid_ and the _Gizmo_ and also change the size of both elements.  
+- For the **Objects** part we have only one option which allows us to see the Initial object (before the algorithm is applied) or the Final result (after the algorithm is applied).  
+- And finally the **Blobs** option will allows us to show or hide the energy fields as well as change its color to see the object better.  
 
 ### Orbit Controls
 
