@@ -52,7 +52,7 @@ If you want to use another example just check the variable name in the js that a
 
 ## Executing the algorithm
 
-In order to use the interactive aplication you just have to open the  `[index](index.html) file on your browser.
+In order to use the interactive aplication you just have to open the [index](index.html) file on your browser.
 
 You have two main features to work with:
 - Option panel
