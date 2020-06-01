@@ -63,13 +63,13 @@ You have two main features to work with:
 If you expand the **Scene Options** panel you may encounter with three new options: World, Objects and Blobs
 
 By selecting one of these more options will be showing.
-In the **World** part we have options to Show/Hide the _World grid_ and the _Gizmo_ and also change the size of both elements.
-For the **Objects** part we have only one option which allows us to see the Initial object (before the algorithm is applied) or the Final result (after the algorithm is applied).
-And finally the **Blobs** option will allows us to show or hide the energy fields as well as change its color to see the object better.
+In the **World** part we have options to Show/Hide the _World grid_ and the _Gizmo_ and also change the size of both elements.  
+For the **Objects** part we have only one option which allows us to see the Initial object (before the algorithm is applied) or the Final result (after the algorithm is applied).  
+And finally the **Blobs** option will allows us to show or hide the energy fields as well as change its color to see the object better.  
 
 ### Orbit Controls
 
-You can rotate the camera using the left mouse button, move the camera using the right mouse button and even zoom in or zoom out using the mouse wheel.
+You can rotate the camera using the left mouse button, move the camera using the right mouse button and even zoom in or zoom out using the mouse wheel.  
 
 These controls have been added to give a more interactive way of inspecting the objects through the created scene.
 
@@ -147,4 +147,5 @@ function linearinterpolation(point1, point2, energy1, energy2)
 ```
 
 ### Author and Acknowledgment
+
 This code is a project developed by @Samuglz6 for the Computer Graphics course at the University of Castilla-La Mancha.
